@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cignex.ppmtool.model.Project;
+import com.cignex.ppmtool.services.MapValidationErrorService;
 import com.cignex.ppmtool.services.ProjectService;
 
 @RestController
@@ -25,23 +26,17 @@ public class ProjectController {
 	@Autowired
 	private ProjectService projectService;
 
+	@Autowired
+	private MapValidationErrorService validationService;
+
 	@PostMapping("")
 	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
 
-		/*
-		 * logic for getting invalid object response in better format
-		 * 
-		 * { "field" : "defaultMessage" "field" : "defaultMessage" }
-		 */
-
-		if (result.hasErrors()) {
-			Map<String, String> errorMap = new HashMap<>();
-
-			for (FieldError error : result.getFieldErrors()) {
-				errorMap.put(error.getField(), error.getDefaultMessage());
-			}
-			return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
+		ResponseEntity<?> errorMap = validationService.MapValidationService(result);
+		if (errorMap != null) {
+			return errorMap;
 		}
+
 		Project projectOne = projectService.saveOrUpdateProject(project);
 		return new ResponseEntity<Project>(project, HttpStatus.CREATED);
 	}
