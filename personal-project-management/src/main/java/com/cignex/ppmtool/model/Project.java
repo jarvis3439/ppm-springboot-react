@@ -10,6 +10,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
 @Entity
+
 public class Project {
 	
 	@Id
