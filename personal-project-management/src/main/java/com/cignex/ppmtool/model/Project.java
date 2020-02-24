@@ -2,12 +2,17 @@ package com.cignex.ppmtool.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 
@@ -16,13 +21,25 @@ public class Project {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;						// store unique project id
+	
+	@NotBlank(message = "Project name is required")
 	private String projectName;				// store project name
+	
+	@NotBlank(message = "Project Identifier is required")
+	@Size(min = 4, max = 5, message = "Please use 4 to 5 characters")
+	@Column(updatable = false, unique = true)
 	private String projectIdentifier;		// custom identifier 
+	
+	@NotBlank(message = "Project Description is required")
 	private String description;				// project description
 	
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date start_date;				// project starting date
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date end_date;					// project ending date (optional)
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date created_At;				// project creation date
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date updated_At;				// project update date
 
 	public Project() {
