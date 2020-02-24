@@ -36,7 +36,7 @@ public class ProjectController {
 				errorMap.put(error.getField(), error.getDefaultMessage());
 			}
 			
-			return new ResponseEntity<List<FieldError>>(result.getFieldErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
 		}
 		Project projectOne = projectService.saveOrUpdateProject(project);
 		return new ResponseEntity<Project>(project, HttpStatus.CREATED);
