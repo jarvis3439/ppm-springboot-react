@@ -1,7 +1,6 @@
 package com.cignex.ppmtool.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -22,20 +21,25 @@ import com.cignex.ppmtool.services.ProjectService;
 @RestController
 @RequestMapping("api/project")
 public class ProjectController {
-	
+
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@PostMapping("")
 	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
-		
-		if(result.hasErrors()) {
+
+		/*
+		 * logic for getting invalid object response in better format
+		 * 
+		 * { "field" : "defaultMessage" "field" : "defaultMessage" }
+		 */
+
+		if (result.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
-			
+
 			for (FieldError error : result.getFieldErrors()) {
 				errorMap.put(error.getField(), error.getDefaultMessage());
 			}
-			
 			return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
 		}
 		Project projectOne = projectService.saveOrUpdateProject(project);
